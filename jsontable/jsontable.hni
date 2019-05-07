@@ -1,0 +1,131 @@
+<script type="text/x-homegear">
+{
+    "name": "jsontable",
+    "readableName": "json Table",
+    "version": "0.0.1",
+    "maxThreadCount": 1
+}
+</script>
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<style>
+#tabledata{margin:10px 70px 70px;box-shadow:0 35px 50px rgba(0,0,0,0.2)}
+#tabledata table{border-radius:5px;font-size:14px;font-weight:400;border:none;border-collapse:collapse;width:100%;max-width:100%;min-width:700px;white-space:nowrap;background-color:#fff}
+#tabledata td,#tabledata th{text-align:center;padding:8px}
+#tabledata td{border-right:1px solid #f8f8f8;font-size:14px}
+#tabledata thead th{color:#fff;background:#3FA9F5}
+#tabledata thead th:nth-child(odd){color:#fff;background:#3FA9F5}
+#tabledata tr:nth-child(even){background:#F8F8F8}
+.editor-contextmenu ul{list-style-type:none;padding:0;margin-bottom:0}
+.editor-contextmenu ul li a{color:inherit}
+.editor-contextmenu ul li hr{margin-top:7px;margin-bottom:7px}
+</style>
+<script type="text/x-red" data-template-name="jsontable">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="jsontable.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]jsontable.label.name">
+    </div>
+    <div id="tabledatadiv" class="form-row table-wrapper">
+    	<table id="tabledata">
+    	
+    	</table>
+    </div>
+    <div class="form-row" style="margin-bottom: 0px;">
+    <label for="node-input-func"><i class="fa fa-wrench"></i> <span data-i18n="jsontable.label.function"></span></label>
+    <input type="hidden" id="node-input-func" >
+    <input type="hidden" id="node-input-noerr">
+	</div>
+    <div class="form-row" style="position: relative; margin-bottom: 0px;">
+    <label for="node-input-func"><i class="fa fa-file-code-o"></i> <span data-i18n="template.label.template"></span></label>
+    <input type="hidden" id="node-input-func" autofocus="autofocus">
+    <div style="position: absolute; right:0;display:inline-block; text-align: right; font-size: 0.8em;">
+        <span data-i18n="jsontable.label.format"></span>:
+        <select id="node-input-format" style="width:110px; font-size: 10px !important;  height: 24px; padding:0;">
+            <option value="json">JSON</option>
+        </select>
+    </div>
+</div>
+	<div class="form-row node-text-editor-row">
+	    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-func-editor"></div>
+	</div>
+    <div class="form-tips"><span data-i18n="jsontable.tip"></span></div>
+</script>
+<script type="text/javascript">
+/* Function extendet for JSON Table*/
+!function(n){"use strict";n.fn.tableToJSON=function(r){r=n.extend({ignoreColumns:[],onlyColumns:null,ignoreHiddenRows:!0,headings:null,allowHTML:!1},r);var t,i,e=function(n){return null!=n},o=function(t){return e(r.onlyColumns)?-1===n.inArray(t,r.onlyColumns):-1!==n.inArray(t,r.ignoreColumns)},l=function(t,i){var l,a;if(!o(t)){var s=n(i).data("override");l=r.allowHTML?n.trim(n(i).html()):n.trim(n(i).text()),a=e(s)?s:l}return a};return function(t,i){var a,s,u,f,c,h,d,g=[],p=0,m=[];return t.children("tbody,*").children("tr").each(function(t,i){(t>0||e(r.headings))&&(!(h=n(i)).is(":visible")&&r.ignoreHiddenRows||(g[t]||(g[t]=[]),p=0,h.children().each(function(){if(!o(p)){if((d=n(this)).filter("[rowspan]").length)for(u=parseInt(d.attr("rowspan"),10)-1,c=l(p,d),a=1;a<=u;a++)g[t+a]||(g[t+a]=[]),g[t+a][p]=c;if(d.filter("[colspan]").length)for(u=parseInt(d.attr("colspan"),10)-1,c=l(p,d),a=1;a<=u;a++)if(d.filter("[rowspan]").length)for(f=parseInt(d.attr("rowspan"),10),s=0;s<f;s++)g[t+s][p+a]=c;else g[t][p+a]=c;for(;g[t][p];)p++;o(p)||(c=g[t][p]||l(p,d),e(c)&&(g[t][p]=c))}p++})))}),n.each(g,function(r,t){e(t)&&(c=function(r,t){var i={},o=0;return n.each(t,function(n,t){o<r.length&&e(t)&&(i[r[o]]=t,o++)}),i}(i,t),m[m.length]=c)}),m}(this,(i=this.find("tr:first").first(),e(r.headings)?r.headings:(t=[],n(i).children("td,th").each(function(n,r){o(n)||t.push(l(n,r))}),t)))}}(jQuery);
+!function(t){t.fn.JSONToTable=function(e){var a=t.extend({head:[],json:[]},e,{table:this});return table=this,table.data("settings",a),0==table.find("thead").length&&table.append(t("<thead></thead>").append("<tr></tr>")),0==table.find("thead").find("tr").length&&table.find("thead").append("<tr></tr>"),0==table.find("tbody").length&&table.append(t("<tbody></tbody>")),t.each(a.head,function(t,e){table.find("thead").find("tr").append("<th>"+e+"</th>")}),table},t.fn.jsonTableUpdate=function(e){var a=t.extend({source:void 0,rowClass:void 0,callback:void 0},e),n=this.data("settings");"string"==typeof a.source?t.get(a.source,function(e){t.fn.updateFromObj(e,n,a.rowClass,a.callback)}):"object"==typeof a.source&&t.fn.updateFromObj(a.source,n,a.rowClass,a.callback)},t.fn.updateFromObj=function(e,a,n,d){a.table.find("tbody").empty(),t.each(e,function(e,d){var o=t("<tr></tr>").addClass(n);t.each(a.json,function(a,n){"*"==n?o.append(t("<td>"+(e+1)+"</td>")):o.append(t("<td>"+d[this]+"</td>"))}),a.table.append(o)}),"function"==typeof d&&d(),t(window).trigger("resize")}}(jQuery);
+
+jQuery.tableEditor={langs:{en:{insert_row_above:"Insert row above",insert_row_below:"Insert row below",insert_column_on_the_left:"Insert column on the left",insert_column_on_the_right:"Insert column on the right",remove_row:"Remove row",remove_column:"Remove column"},nl:{insert_row_above:"Rij invoegen boven",insert_row_below:"Rij invoegen beneden",insert_column_on_the_left:"Kolom invoegen links",insert_column_on_the_right:"Kolom invoegen rechts",remove_row:"Rij verwijderen",remove_column:"Kolom verwijderen"},es:{insert_row_above:"Añadir fila arriba",insert_row_below:"Añadir fila debajo",insert_column_on_the_left:"Añadir columna a la izquierda",insert_column_on_the_right:"Añador columna a la derecha",remove_row:"Eliminar fila",remove_column:"Eliminar columna"}}},function(t,e,o,l){"use strict";l.fn.tableEditor=function(t,e){var n="tableEditor";if(t===Object(t)||!t)return this.each(function(){l(this).data(n)||l(this).data(n,new i(this,t))});if(1===this.length){var o=l(this).data(n);if(o[t])return o[t](e)}};var i=function(t,e){var n=this;n.document=t.ownerDocument||o,n.table=l(t),null!=(e=e||{}).lang||null!=l.tableEditor.langs[e.lang]?n.lang=l.extend(!0,{},l.tableEditor.langs.en,l.tableEditor.langs[e.lang]):n.lang=l.tableEditor.langs.en,n.options={lang:e.lang||"en",onChange:e.onChange||function(){}},n.init()};i.prototype={init:function(){l(this.table).addClass("table-editable"),this.binds()},binds:function(){var o=this;l(this.table).on("click.tableEditor","td",function(){l(this).index(),l(this).closest("tr").index();o.edit(l(this))}),l(this.table).on("contextmenu.tableEditor","td",function(t){var e=this,n=(l(this).index(),l(this).closest("tr"));n.index(),n.find("> td").length;l(".editor-contextmenu").remove();l(this).popover({trigger:"manual",placement:"bottom",container:"body",html:!0,template:'<div class="popover editor-contextmenu" role="tooltip"><div class="arrow" style="top: 50%;"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',content:"<ul><li>"+['<a href="#" data-action="insert_row_above">'+jQuery.tableEditor.langs[o.options.lang].insert_row_above+"</a>",'<a href="#" data-action="insert_row_below">'+jQuery.tableEditor.langs[o.options.lang].insert_row_below+"</a>","<hr/>",'<a href="#" data-action="insert_column_on_the_left">'+jQuery.tableEditor.langs[o.options.lang].insert_column_on_the_left+"</a>",'<a href="#" data-action="insert_column_on_the_right">'+jQuery.tableEditor.langs[o.options.lang].insert_column_on_the_right+"</a>","<hr/>",'<a href="#" data-action="remove_row">'+jQuery.tableEditor.langs[o.options.lang].remove_row+"</a>",'<a href="#" data-action="remove_column">'+jQuery.tableEditor.langs[o.options.lang].remove_column+"</a>"].join("</li><li>")+"</li></ul>"}).popover("show");l(".editor-contextmenu a").off("click").on("click",function(t){o.action(l(this).data("action"),e),t.preventDefault()}),t.preventDefault()}),l("body").off("click.tableEditor").on("click.tableEditor",function(t){l(".popover").is(":visible")&&l(".table-editable").find("td").each(function(t,e){l(e).popover&&l(e).popover("hide")})})},destroy:function(){l(this.table).off("click.tableEditor").off("contextmenu.tableEditor").removeClass("table-editable").removeData("tableEditor")},json:function(t){if(t){"object"!=typeof t&&(t=JSON.parse(t));var o="";return l.each(t,function(n,t){o+='<tr data-row="'+n+'">',l.each(t,function(t,e){o+='<td data-row="'+n+'" data-cell="'+t+'">'+e+"</td>"}),o+="</tr>"}),o='<table class="table table-bordered table-editable"><tbody>'+o+"</tbody></table>",l(this.table).html(o),o}var i=[];return l.each(l(this.table).find("tr"),function(t,e){var n=[];l.each(l(e).find("td"),function(t,e){n.push(l(e).html())}),i.push(n)}),JSON.stringify(i)},edit:function(t){if(!l(t).hasClass("editing")){var e=this,n=l(t).html(),o=l('<textarea class="editor"></textarea>');l(t).append(o).addClass("editing"),l(o).focus().val(n.replace(/<br>/g,"\r")).on("blur",function(){l(t).html(l(o).val().replace(/(\r\n|\n\r|\r|\n)/g,"<br>")),l(t).removeClass("editing"),e.options.onChange(l(o).val(),t,e.table,e),l(o).remove()})}},action:function(t,e){var n=this,o=l(e).index(),i=l(e).closest("tr"),r=(i.index(),i.find("> td").length),a=l(n.table).find("tbody");"insert_row_above"==t&&l(e).parent().before("<tr>"+"<td></td>".repeat(r)+"</tr>"),"insert_row_below"==t&&l(e).parent().after("<tr>"+"<td></td>".repeat(r)+"</tr>"),"insert_column_on_the_left"==t&&l(n.table).find("td:nth-child("+(o+1)+")").before("<td></td>"),"insert_column_on_the_right"==t&&l(n.table).find("td:nth-child("+(o+1)+")").after("<td></td>"),"remove_row"==t&&l(e).parent().remove(),"remove_column"==t&&l(n.table).find("td:nth-child("+(o+1)+")").remove(),l(a).find("tr").each(function(t,e){""==l(e).html().trim()&&l(e).remove()}),0==l(a).children().length&&l(a).html("<tr><td></td></tr>"),l(".editor-contextmenu").remove()}}}(navigator,window,document,jQuery);
+
+
+RED.nodes.registerType('jsontable',{
+        color:"#74a4a4",
+        category: 'input',
+        defaults: {
+            name: {value:""},
+            func:{value:'[{"colum1":"data","colum2":"data","colum3":"data","colum4":"data"},{"colum1":"data","colum2":"data","colum3":"data","colum4":"data"},{"colum1":"data","colum2":"data","colum3":"data","colum4":"data"},{"colum1":"data","colum2":"data","colum3":"data","colum4":"data"}]'},
+            aspayload:{value:false},
+            noerr: {value:0,required:true,validate:function(v){ return ((!v) || (v === 0)) ? true : false; }}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "arrow-in.png",
+        label: function() {
+            return this.name;
+        },
+        oneditprepare: function() {
+            var that = this;
+            this.editor = RED.editor.createEditor({
+                id: 'node-input-func-editor',
+                mode: {path:"ace/mode/json", inline:true},
+                value: $("#node-input-func").val(),   
+            });
+            this.editor.focus();
+            var headarr=[];
+            $(jQuery.parseJSON(this.editor.getValue())).each(function() {headarr=Object.keys(this);});
+            $("#tabledata").JSONToTable({head : headarr,json : headarr});
+            var options = {
+            		source: JSON.parse(this.editor.getValue()),
+            		callback: function(){
+    			    		$('#tabledata').tableEditor({
+    			    				onChange: function(value, cell, table, tableEditor) {
+    			    				that.editor.getSession().setValue(JSON.stringify($('#tabledata').tableToJSON(),null,4));
+    			    				}
+    			    		});		
+           }};
+            $("#tabledata").jsonTableUpdate(options);
+            $("#node-input-payload").typedInput('type',this.payloadType);
+
+        },
+        oneditsave: function() {
+            var annot = this.editor.getSession().getAnnotations();
+            this.noerr = 0;
+            $("#node-input-noerr").val(0);
+            for (var k=0; k < annot.length; k++) {
+                //console.log(annot[k].type,":",annot[k].text, "on line", annot[k].row);
+                if (annot[k].type === "error") {
+                    $("#node-input-noerr").val(annot.length);
+                    this.noerr = annot.length;
+                }
+            }
+            $("#node-input-func").val(this.editor.getValue());
+            delete this.editor;
+        },
+        oneditresize: function(size) {
+
+        }
+    });
+</script>
