@@ -22,13 +22,22 @@
   limitations under the License.
 -->
 <style>
-#tabledata{margin:10px 70px 70px;box-shadow:0 35px 50px rgba(0,0,0,0.2)}
-#tabledata table{border-radius:5px;font-size:14px;font-weight:400;border:none;border-collapse:collapse;width:100%;max-width:100%;min-width:700px;white-space:nowrap;background-color:#fff}
+#tabledata{margin:10px 30px 30px;}
+#tabledata {font-size:14px;font-weight:400;border:1px solid #f8f8f8;border-collapse:collapse;width:90%;max-width:90%;min-width:300px;white-space:nowrap;background-color:#fff}
 #tabledata td,#tabledata th{text-align:center;padding:8px}
+#tabledata td textarea{border:0px; width:100px;height:35px;overflow:auto;resize: none;}
 #tabledata td{border-right:1px solid #f8f8f8;font-size:14px}
 #tabledata thead th{color:#fff;background:#3FA9F5}
 #tabledata thead th:nth-child(odd){color:#fff;background:#3FA9F5}
 #tabledata tr:nth-child(even){background:#F8F8F8}
+.table-editable td {
+	position: relative;
+	height: 46px;
+}
+
+.table-editable td.editing {
+	min-width: 96px;
+}
 .editor-contextmenu ul{list-style-type:none;padding:0;margin-bottom:0}
 .editor-contextmenu ul li a{color:inherit}
 .editor-contextmenu ul li hr{margin-top:7px;margin-bottom:7px}
@@ -68,7 +77,261 @@
 !function(n){"use strict";n.fn.tableToJSON=function(r){r=n.extend({ignoreColumns:[],onlyColumns:null,ignoreHiddenRows:!0,headings:null,allowHTML:!1},r);var t,i,e=function(n){return null!=n},o=function(t){return e(r.onlyColumns)?-1===n.inArray(t,r.onlyColumns):-1!==n.inArray(t,r.ignoreColumns)},l=function(t,i){var l,a;if(!o(t)){var s=n(i).data("override");l=r.allowHTML?n.trim(n(i).html()):n.trim(n(i).text()),a=e(s)?s:l}return a};return function(t,i){var a,s,u,f,c,h,d,g=[],p=0,m=[];return t.children("tbody,*").children("tr").each(function(t,i){(t>0||e(r.headings))&&(!(h=n(i)).is(":visible")&&r.ignoreHiddenRows||(g[t]||(g[t]=[]),p=0,h.children().each(function(){if(!o(p)){if((d=n(this)).filter("[rowspan]").length)for(u=parseInt(d.attr("rowspan"),10)-1,c=l(p,d),a=1;a<=u;a++)g[t+a]||(g[t+a]=[]),g[t+a][p]=c;if(d.filter("[colspan]").length)for(u=parseInt(d.attr("colspan"),10)-1,c=l(p,d),a=1;a<=u;a++)if(d.filter("[rowspan]").length)for(f=parseInt(d.attr("rowspan"),10),s=0;s<f;s++)g[t+s][p+a]=c;else g[t][p+a]=c;for(;g[t][p];)p++;o(p)||(c=g[t][p]||l(p,d),e(c)&&(g[t][p]=c))}p++})))}),n.each(g,function(r,t){e(t)&&(c=function(r,t){var i={},o=0;return n.each(t,function(n,t){o<r.length&&e(t)&&(i[r[o]]=t,o++)}),i}(i,t),m[m.length]=c)}),m}(this,(i=this.find("tr:first").first(),e(r.headings)?r.headings:(t=[],n(i).children("td,th").each(function(n,r){o(n)||t.push(l(n,r))}),t)))}}(jQuery);
 !function(t){t.fn.JSONToTable=function(e){var a=t.extend({head:[],json:[]},e,{table:this});return table=this,table.data("settings",a),0==table.find("thead").length&&table.append(t("<thead></thead>").append("<tr></tr>")),0==table.find("thead").find("tr").length&&table.find("thead").append("<tr></tr>"),0==table.find("tbody").length&&table.append(t("<tbody></tbody>")),t.each(a.head,function(t,e){table.find("thead").find("tr").append("<th>"+e+"</th>")}),table},t.fn.jsonTableUpdate=function(e){var a=t.extend({source:void 0,rowClass:void 0,callback:void 0},e),n=this.data("settings");"string"==typeof a.source?t.get(a.source,function(e){t.fn.updateFromObj(e,n,a.rowClass,a.callback)}):"object"==typeof a.source&&t.fn.updateFromObj(a.source,n,a.rowClass,a.callback)},t.fn.updateFromObj=function(e,a,n,d){a.table.find("tbody").empty(),t.each(e,function(e,d){var o=t("<tr></tr>").addClass(n);t.each(a.json,function(a,n){"*"==n?o.append(t("<td>"+(e+1)+"</td>")):o.append(t("<td>"+d[this]+"</td>"))}),a.table.append(o)}),"function"==typeof d&&d(),t(window).trigger("resize")}}(jQuery);
 
-jQuery.tableEditor={langs:{en:{insert_row_above:"Insert row above",insert_row_below:"Insert row below",insert_column_on_the_left:"Insert column on the left",insert_column_on_the_right:"Insert column on the right",remove_row:"Remove row",remove_column:"Remove column"},nl:{insert_row_above:"Rij invoegen boven",insert_row_below:"Rij invoegen beneden",insert_column_on_the_left:"Kolom invoegen links",insert_column_on_the_right:"Kolom invoegen rechts",remove_row:"Rij verwijderen",remove_column:"Kolom verwijderen"},es:{insert_row_above:"Añadir fila arriba",insert_row_below:"Añadir fila debajo",insert_column_on_the_left:"Añadir columna a la izquierda",insert_column_on_the_right:"Añador columna a la derecha",remove_row:"Eliminar fila",remove_column:"Eliminar columna"}}},function(t,e,o,l){"use strict";l.fn.tableEditor=function(t,e){var n="tableEditor";if(t===Object(t)||!t)return this.each(function(){l(this).data(n)||l(this).data(n,new i(this,t))});if(1===this.length){var o=l(this).data(n);if(o[t])return o[t](e)}};var i=function(t,e){var n=this;n.document=t.ownerDocument||o,n.table=l(t),null!=(e=e||{}).lang||null!=l.tableEditor.langs[e.lang]?n.lang=l.extend(!0,{},l.tableEditor.langs.en,l.tableEditor.langs[e.lang]):n.lang=l.tableEditor.langs.en,n.options={lang:e.lang||"en",onChange:e.onChange||function(){}},n.init()};i.prototype={init:function(){l(this.table).addClass("table-editable"),this.binds()},binds:function(){var o=this;l(this.table).on("click.tableEditor","td",function(){l(this).index(),l(this).closest("tr").index();o.edit(l(this))}),l(this.table).on("contextmenu.tableEditor","td",function(t){var e=this,n=(l(this).index(),l(this).closest("tr"));n.index(),n.find("> td").length;l(".editor-contextmenu").remove();l(this).popover({trigger:"manual",placement:"bottom",container:"body",html:!0,template:'<div class="popover editor-contextmenu" role="tooltip"><div class="arrow" style="top: 50%;"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',content:"<ul><li>"+['<a href="#" data-action="insert_row_above">'+jQuery.tableEditor.langs[o.options.lang].insert_row_above+"</a>",'<a href="#" data-action="insert_row_below">'+jQuery.tableEditor.langs[o.options.lang].insert_row_below+"</a>","<hr/>",'<a href="#" data-action="insert_column_on_the_left">'+jQuery.tableEditor.langs[o.options.lang].insert_column_on_the_left+"</a>",'<a href="#" data-action="insert_column_on_the_right">'+jQuery.tableEditor.langs[o.options.lang].insert_column_on_the_right+"</a>","<hr/>",'<a href="#" data-action="remove_row">'+jQuery.tableEditor.langs[o.options.lang].remove_row+"</a>",'<a href="#" data-action="remove_column">'+jQuery.tableEditor.langs[o.options.lang].remove_column+"</a>"].join("</li><li>")+"</li></ul>"}).popover("show");l(".editor-contextmenu a").off("click").on("click",function(t){o.action(l(this).data("action"),e),t.preventDefault()}),t.preventDefault()}),l("body").off("click.tableEditor").on("click.tableEditor",function(t){l(".popover").is(":visible")&&l(".table-editable").find("td").each(function(t,e){l(e).popover&&l(e).popover("hide")})})},destroy:function(){l(this.table).off("click.tableEditor").off("contextmenu.tableEditor").removeClass("table-editable").removeData("tableEditor")},json:function(t){if(t){"object"!=typeof t&&(t=JSON.parse(t));var o="";return l.each(t,function(n,t){o+='<tr data-row="'+n+'">',l.each(t,function(t,e){o+='<td data-row="'+n+'" data-cell="'+t+'">'+e+"</td>"}),o+="</tr>"}),o='<table class="table table-bordered table-editable"><tbody>'+o+"</tbody></table>",l(this.table).html(o),o}var i=[];return l.each(l(this.table).find("tr"),function(t,e){var n=[];l.each(l(e).find("td"),function(t,e){n.push(l(e).html())}),i.push(n)}),JSON.stringify(i)},edit:function(t){if(!l(t).hasClass("editing")){var e=this,n=l(t).html(),o=l('<textarea class="editor"></textarea>');l(t).append(o).addClass("editing"),l(o).focus().val(n.replace(/<br>/g,"\r")).on("blur",function(){l(t).html(l(o).val().replace(/(\r\n|\n\r|\r|\n)/g,"<br>")),l(t).removeClass("editing"),e.options.onChange(l(o).val(),t,e.table,e),l(o).remove()})}},action:function(t,e){var n=this,o=l(e).index(),i=l(e).closest("tr"),r=(i.index(),i.find("> td").length),a=l(n.table).find("tbody");"insert_row_above"==t&&l(e).parent().before("<tr>"+"<td></td>".repeat(r)+"</tr>"),"insert_row_below"==t&&l(e).parent().after("<tr>"+"<td></td>".repeat(r)+"</tr>"),"insert_column_on_the_left"==t&&l(n.table).find("td:nth-child("+(o+1)+")").before("<td></td>"),"insert_column_on_the_right"==t&&l(n.table).find("td:nth-child("+(o+1)+")").after("<td></td>"),"remove_row"==t&&l(e).parent().remove(),"remove_column"==t&&l(n.table).find("td:nth-child("+(o+1)+")").remove(),l(a).find("tr").each(function(t,e){""==l(e).html().trim()&&l(e).remove()}),0==l(a).children().length&&l(a).html("<tr><td></td></tr>"),l(".editor-contextmenu").remove()}}}(navigator,window,document,jQuery);
+jQuery.tableEditor = {
+		langs: {
+			en: {
+				insert_row_above: 'Insert row above',
+				insert_row_below: 'Insert row below',
+				insert_column_on_the_left: 'Insert column on the left',
+				insert_column_on_the_right: 'Insert column on the right',
+				remove_row: 'Remove row',
+				remove_column: 'Remove column'
+			},
+			de: {
+				insert_row_above: 'Insert row above',
+				insert_row_below: 'Insert row below',
+				insert_column_on_the_left: 'Insert column on the left',
+				insert_column_on_the_right: 'Insert column on the right',
+				remove_row: 'Remove row',
+				remove_column: 'Remove column'
+			},
+		}
+	}
+
+	;(function (navigator, window, document, $) {
+		'use strict'
+
+		// Helpers
+		$.fn.tableEditor = function (options, params) {
+			var tableEditorDataName = 'tableEditor'
+			if (options === Object(options) || !options) {
+				return this.each(function () {
+					if (!$(this).data(tableEditorDataName))
+						$(this).data(tableEditorDataName, new tableEditor(this, options))
+				})
+			}
+
+			if (this.length === 1) {
+				var editor = $(this).data(tableEditorDataName)
+				if (editor[options])
+					return editor[options](params)
+			}
+		}
+
+		// @param: table is the DOM element
+		var tableEditor = function (table, options) {
+			var editor = this
+
+			// Get the document of the element. It use to makes the plugin compatible on iframes.
+			editor.document = table.ownerDocument || document
+
+			// jQuery object of the editor
+			editor.table = $(table) // $ta : Textarea
+
+			options = options || {}
+
+			// Language/localization
+			if (options.lang != null || $.tableEditor.langs[options.lang] != null)
+				editor.lang = $.extend(true, {}, $.tableEditor.langs.en, $.tableEditor.langs[options.lang])
+			else
+				editor.lang = $.tableEditor.langs.en
+
+			// Defaults Options
+			editor.options = {
+				lang: options.lang || 'en',
+				onChange: options.onChange || function() {}
+			}
+
+			editor.init()
+		}
+
+		tableEditor.prototype = {
+			// Initialize the editor
+			init: function() {
+				$(this.table).addClass('table-editable')
+
+				// Binds
+				this.binds()
+			},
+
+			// Binds
+			binds: function() {
+				var editor = this
+
+				// Debug: Row and cell
+				$(this.table).on('click.tableEditor', 'td', function() {
+					var col = $(this).index(),
+						$tr = $(this).closest('tr'),
+						row = $tr.index()
+
+					editor.edit($(this))
+				});
+				// Debug: Row and cell
+				$(this.table).on('click.tableEditor', 'th', function() {
+					var col = $(this).index(),
+						$tr = $(this).closest('tr'),
+						row = $tr.index()
+
+					editor.edit($(this))
+				});
+
+				// Right click (context menu)
+				$(this.table).on('contextmenu.tableEditor', 'td', function(e) {
+					var td = this,
+						col = $(this).index(),
+						$tr = $(this).closest('tr'),
+						row = $tr.index(),
+						width = $tr.find('> td').length
+
+					$('.editor-contextmenu').remove()
+					var popover = $(this).popover({
+						trigger: 'manual',
+						placement: 'bottom',
+						container: 'body',
+						html: true,
+						template: '<div class="popover editor-contextmenu" role="tooltip">' + '<div class="arrow" style="top: 50%;display:hidden;"></div>' + '<h3 class="popover-title"></h3>' + '<div class="popover-content"></div></div>',
+						content: '<ul><li>' + ([
+							'<a href="#" data-action="insert_row_above">' + jQuery.tableEditor.langs[editor.options.lang].insert_row_above + '</a>',
+							'<a href="#" data-action="insert_row_below">' + jQuery.tableEditor.langs[editor.options.lang].insert_row_below + '</a>',
+							'<hr/>',
+							'<a href="#" data-action="insert_column_on_the_left">' + jQuery.tableEditor.langs[editor.options.lang].insert_column_on_the_left + '</a>',
+							'<a href="#" data-action="insert_column_on_the_right">' + jQuery.tableEditor.langs[editor.options.lang].insert_column_on_the_right + '</a>',
+							'<hr/>',
+							'<a href="#" data-action="remove_row">' + jQuery.tableEditor.langs[editor.options.lang].remove_row + '</a>',
+							'<a href="#" data-action="remove_column">' + jQuery.tableEditor.langs[editor.options.lang].remove_column + '</a>'
+						]).join('</li><li>') + '</li></ul>'
+					}).popover('show')
+					$('.editor-contextmenu a').off('click').on('click', function(e) {
+						editor.action($(this).data('action'), td)
+						e.preventDefault()
+					})
+					e.preventDefault()
+				})
+
+				$('body').off('click.tableEditor').on('click.tableEditor', function (e) {
+					if ($('.popover').is(':visible'))
+						$('.table-editable').find('td').each(function(index, element) {
+							if ($(element).popover)
+								$(element).popover('hide')
+						})
+				})
+			},
+
+			// Destroy the editor
+			destroy: function () {
+				$(this.table)
+					.off('click.tableEditor')
+					.off('contextmenu.tableEditor')
+					.removeClass('table-editable')
+					.removeData('tableEditor')
+			},
+
+			// Set/Get JSON
+			json: function(json) {
+				// Get
+				if (!json) {
+					var result = []
+					$.each($(this.table).find('tr'), function(row_number, row) {
+						var tr = []
+						$.each($(row).find('td'), function(cell_number, cell) {
+							tr.push($(cell).html())
+						})
+						result.push(tr)
+					})
+					return JSON.stringify(result)
+				// Set
+				} else {
+					if (typeof json != 'object')
+						json = JSON.parse(json)
+					var html = ''
+					$.each(json, function(row_number, row) {
+						html += '<tr data-row="' + row_number + '">'
+						$.each(row, function(cell_number, cell) {
+							html += '<td data-row="' + row_number + '" data-cell="' + cell_number + '">' + cell + '</td>'
+						})
+						html += '</tr>'
+					})
+					html = '<table class="table table-bordered table-editable"><tbody>' + html + '</tbody></table>'
+					$(this.table).html(html)
+					return html
+				}
+			},
+
+			// Edit
+			edit: function(cell) {
+				if ($(cell).hasClass('editing'))
+					return
+				// Edit cell
+				var editor = this,
+					value = $(cell).html(),
+					input = $('<textarea class="editor">'+$(cell).html()+'</textarea>')
+				$(cell).addClass('editing').html(input);
+				$(input)
+					.focus()
+					.val(value.replace(/<br>/g, '\r'))
+					.on('blur', function() {
+						$(cell).html($(input).val().replace(/(\r\n|\n\r|\r|\n)/g, '<br>'))
+						$(cell).removeClass('editing')
+						editor.options.onChange($(input).val(), cell, editor.table, editor)
+						$(input).remove()
+					})
+			},
+
+			// Action
+			action: function(name, td) {
+				var editor = this,
+					col = $(td).index(),
+					$tr = $(td).closest('tr'),
+					row = $tr.index(),
+					width = $tr.find('> td').length,
+					tbody = $(editor.table).find('tbody')
+
+				if (name == 'insert_row_above'){
+					$(td).parent().before('<tr>' + ('<td>data</td>').repeat(width) + '</tr>');
+					editor.options.onChange(null, null, editor.table, editor);
+					
+				}
+				if (name == 'insert_row_below'){
+					$(td).parent().after('<tr>' + ('<td>data</td>').repeat(width) + '</tr>');
+					editor.options.onChange(null, null, editor.table, editor);
+
+				}
+					if (name == 'insert_column_on_the_left'){
+						$(editor.table).find('th:nth-child(' + (col + 1) + ')').before('<th>head</th>');
+						$(editor.table).find('td:nth-child(' + (col + 1) + ')').before('<td>data</td>');
+						editor.options.onChange(null, null, editor.table, editor);
+					}
+					if (name == 'insert_column_on_the_right'){
+						$(editor.table).find('th:nth-child(' + (col + 1) + ')').after('<th>head</th>');
+						$(editor.table).find('td:nth-child(' + (col + 1) + ')').after('<td>data</td>');
+						editor.options.onChange(null, null, editor.table, editor);
+				
+					}
+				if (name == 'remove_row'){
+					$(td).parent().remove();
+					$("tbody:first-child").addClass('editing');
+					$("tbody:first-child").removeClass('editing');
+					editor.options.onChange(null, null, editor.table, editor);
+				}
+				if (name == 'remove_column'){
+					$(editor.table).find('th:nth-child(' + (col + 1) + ')').remove();
+					$(editor.table).find('td:nth-child(' + (col + 1) + ')').remove();
+					editor.options.onChange(null, null, editor.table, editor);
+				}
+
+				// Prevent empty table
+				$(tbody).find('tr').each(function(index, element) {
+					if ($(element).html().trim() == '')
+						$(element).remove()
+				})
+				if ($(tbody).children().length == 0)
+					$(tbody).html('<tr><td></td></tr>')
+
+				// Close context menu
+				$('.editor-contextmenu').remove()
+			}
+		}
+	})(navigator, window, document, jQuery);
 
 
 RED.nodes.registerType('jsontable',{
@@ -91,7 +354,7 @@ RED.nodes.registerType('jsontable',{
             this.editor = RED.editor.createEditor({
                 id: 'node-input-func-editor',
                 mode: {path:"ace/mode/json", inline:true},
-                value: $("#node-input-func").val(),   
+                value: $("#node-input-func").val()
             });
             this.editor.focus();
             var headarr=[];
