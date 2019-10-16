@@ -419,7 +419,13 @@ RED.nodes.registerType('jsontable',{
             aspayload:{value:false},
             noerr: {value:0,required:true,validate:function(v){ return ((!v) || (v === 0)) ? true : false; }}
         },
-        inputs:0,
+        inputs:1,
+        inputInfo: [
+            {
+                label: "TRG",
+                types: ["any"]
+            }
+        ],
         outputs:1,
         icon: "arrow-in.png",
         label: function() {
@@ -459,12 +465,13 @@ RED.nodes.registerType('jsontable',{
 
 $( "#jsonlint-button" ).click(function() {
 	try {
+
         var result = jsonlint.parse(that.editor.getSession().getValue());
         if (result) {
         	$("#result").html("JSON is valid!");
         	$("#result").addClass( "pass");
         		//document.getElementById("result").className = "pass";
-       
+
         	  that.editor.getSession().setValue(JSON.stringify(result,null,4));
             
           
