@@ -1,0 +1,110 @@
+[
+  {
+    "weather": "normal",
+    "time": "sunrise",
+    "livingroom": "0",
+    "labor": "0",
+    "dinner": "0",
+    "kitchen": "0",
+    "bedroom": "0"
+  },
+  {
+    "weather": "normal",
+    "time": "sunset",
+    "livingroom": "100",
+    "labor": "100",
+    "dinner": "100",
+    "kitchen": "100",
+    "bedroom": "100"
+  },
+  {
+    "weather": "sun",
+    "time": "sunrise",
+    "livingroom": "65",
+    "labor": "75",
+    "dinner": "60",
+    "kitchen": "50",
+    "bedroom": "65"
+  },
+  {
+    "weather": "sun",
+    "time": "sunset",
+    "livingroom": "80",
+    "labor": "100",
+    "dinner": "100",
+    "kitchen": "100",
+    "bedroom": "75"
+  },
+  {
+    "weather": "snow",
+    "time": "sunrise",
+    "livingroom": "30",
+    "labor": "40",
+    "dinner": "20",
+    "kitchen": "20",
+    "bedroom": "30"
+  },
+  {
+    "weather": "snow",
+    "time": "sunset",
+    "livingroom": "100",
+    "labor": "100",
+    "dinner": "100",
+    "kitchen": "100",
+    "bedroom": "100"
+  },
+  {
+    "weather": "frost",
+    "time": "sunrise",
+    "livingroom": "50",
+    "labor": "50",
+    "dinner": "50",
+    "kitchen": "50",
+    "bedroom": "50"
+  },
+  {
+    "weather": "frost",
+    "time": "sunset",
+    "livingroom": "100",
+    "labor": "100",
+    "dinner": "100",
+    "kitchen": "100",
+    "bedroom": "100"
+  },
+  {
+    "weather": "rain",
+    "time": "sunrise",
+    "livingroom": "50",
+    "labor": "50",
+    "dinner": "50",
+    "kitchen": "50",
+    "bedroom": "50"
+  },
+  {
+    "weather": "rain",
+    "time": "sunset",
+    "livingroom": "100",
+    "labor": "100",
+    "dinner": "100",
+    "kitchen": "100",
+    "bedroom": "100"
+  },
+  {
+    "weather": "storm",
+    "time": "sunrise",
+    "livingroom": "0",
+    "labor": "0",
+    "dinner": "0",
+    "kitchen": "0",
+    "bedroom": "0"
+  },
+  {
+    "weather": "storm",
+    "time": "sunset",
+    "livingroom": "100",
+    "labor": "100",
+    "dinner": "100",
+    "kitchen": "100",
+    "bedroom": "100"
+  }
+]

@@ -1,0 +1,129 @@
+<script type="text/x-homegear">
+{
+    "name": "pushover",
+    "readableName": "Pushover",
+    "version": "0.0.1",
+    "maxThreadCount": 0
+}
+</script>
+<script type="text/x-red" data-template-name="pushover">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="pushover.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]pushover.label.name">
+    </div>
+    <div class="form-row">
+		<label for="node-input-apptoken"><i class="fa fa-tasks"></i> <span data-i18n="pushover.label.apptoken"></span></label>
+		<input type="text" id="node-input-apptoken" data-i18n="[placeholder]pushover.label.apptoken">
+	</div>
+	<div class="form-row">
+		<label for="node-input-usertoken"><i class="fa fa-tasks"></i> <span data-i18n="pushover.label.apptoken"></span></label>
+		<input type="text" id="node-input-usertoken" data-i18n="[placeholder]pushover.label.usertoken">
+	</div>
+	<div class="form-row">
+		<label for="node-input-title"><i class="fa fa-tasks"></i> <span data-i18n="pushover.label.title"></span></label>
+		<input type="text" id="node-input-title" data-i18n="[placeholder]pushover.label.title">
+		</div>
+    <div class="form-row" style="margin-bottom: 0px;">
+        <label for="node-input-message"><i class="fa fa-comment-o"></i> <span data-i18n="pushover.label.message"></span></label>
+        <input type="hidden" id="node-input-message" autofocus="autofocus">
+    </div>
+
+    <div class="form-row node-text-editor-row">
+        <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-message-editor" ></div>
+    </div>
+    <div class="form-row">
+		<label for="node-input-sound"><i class="fa fa-tasks"></i> <span data-i18n="pushover.label.sound"></span></label>
+		  <select id="node-input-sound" name="node-input-sound" size="1">
+		      <option selected value="pushover">pushover</option>
+		      <option value="bike">bike</option>
+		      <option value="bugle">bugle</option>
+		      <option value="cashregister">cashregister</option>
+		      <option value="classical">classical</option>
+		      <option value="cosmic">cosmic</option>
+		      <option value="falling">falling</option>
+		      <option value="gamelan">gamelan</option>
+		      <option value="incoming">incoming</option>
+		      <option value="intermission">intermission</option>
+		      <option value="magic">magic</option>
+		      <option value="mechanical">mechanical</option>
+		      <option value="pianobar">pianobar</option>
+		      <option value="siren">siren</option>
+		      <option value="spacealarm">spacealarm</option>
+		      <option value="tugboat">tugboat</option>
+		      <option value="alien">alien</option>
+		      <option value="climb">climb</option>
+		      <option value="persistent">persistent</option>
+		      <option value="echo">echo</option>
+		      <option value="updown">updown</option>
+		      <option value="none">none</option>
+	      </select>
+	</div>	
+    <div class="form-row">
+		<label for="node-input-image"><i class="fa fa-tasks"></i> <span data-i18n="pushover.label.image"></span></label>
+		<input type="text" id="node-input-image" data-i18n="[placeholder]pushover.label.image">
+	</div>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('pushover',{
+        color:"#C0DEED",
+        category: 'notification',
+        defaults: {
+            name: {value:""},
+            usertoken: {value:""},
+            apptoken: {value:""},
+            title: {value:""},
+            message: {value:""},
+            image: {value:""},
+            sound: {value:""},
+            timestamp: {value:""},
+            priority: {value:"2"},
+            expire: {value:""},
+            retry: {value:""},
+            url: {value:""},
+            url_title: {value:""},
+            device: {value:""},
+            html: {value:""}
+            
+        },
+        inputs:1,
+        outputs:0,
+        align: "right",
+        icon: "white-globe.png",
+        label: function() {
+            if(this.name) return this.name;
+            return "pushover";
+        },
+        oneditprepare: function() {
+            var that = this;
+            $( "#node-input-inputs" ).spinner({
+                min:1
+            });
+            $( "#node-input-outputs" ).spinner({
+                min:1
+            });
+
+            this.editor = RED.editor.createEditor({
+                id: 'node-input-message-editor',
+                mode: {path:"ace/mode/text", inline:true},
+                value: $("#node-input-message").val(),
+            });
+
+            this.editor.focus();
+        },
+        oneditsave: function() {
+            $("#node-input-message").val(this.editor.getValue());
+            delete this.editor;
+        },
+        oneditresize: function(size) {
+            var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+            var height = $("#dialog-form").height();
+            for (var i=0;i<rows.size();i++) {
+                height -= $(rows[i]).outerHeight(true);
+            }
+            var editorRow = $("#dialog-form>div.node-text-editor-row");
+            height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+            $(".node-text-editor").css("height",height+"px");
+            this.editor.resize();
+        }
+    });
+</script>
